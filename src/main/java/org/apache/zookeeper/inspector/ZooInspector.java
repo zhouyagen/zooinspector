@@ -51,6 +51,7 @@ public class ZooInspector {
 
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFrame frame = new JFrame("ZooInspector");
+            frame.setLocationByPlatform(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             // debug
