@@ -45,9 +45,11 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper.States;
 import org.apache.zookeeper.inspector.ZooInspectorUtil;
@@ -449,6 +451,9 @@ public class ZooInspectorTreeViewer extends JPanel implements NodeListener,
             return this.parent;
         }
 
+        public String getNodePath(){
+            return this.nodePath;
+        }
         /*
          * (non-Javadoc)
          *
@@ -554,5 +559,40 @@ public class ZooInspectorTreeViewer extends JPanel implements NodeListener,
         }
         this.toasterManager.showToaster(ZooInspectorIconResources
                 .getInformationIcon(), sb.toString());
+    }
+
+    public void setSelect(String keyword){
+        TreeModel model = this.tree.getModel();
+        ZooInspectorTreeNode treeNode = (ZooInspectorTreeNode)model.getRoot();
+        List<ZooInspectorTreeNode> matchs = new ArrayList<>();
+        searchMatchNode(treeNode,keyword,matchs);
+        List<TreePath> selectedList = new ArrayList<>();
+        for(ZooInspectorTreeNode node : matchs){
+            List<ZooInspectorTreeNode> paths = new ArrayList<>();
+            paths.add(node);
+            do{
+                node = (ZooInspectorTreeNode)node.getParent();
+                if(node == null){
+                    break;
+                }
+                paths.add(node);
+            }while(true);
+            Collections.reverse(paths);
+            selectedList.add(new TreePath(paths.toArray(new ZooInspectorTreeNode[]{})));
+        }
+        this.tree.setSelectionPaths(selectedList.toArray(new TreePath[]{}));
+    }
+
+    public void searchMatchNode(ZooInspectorTreeNode root , String keyword,List<ZooInspectorTreeNode> matchs){
+        int count = root.getChildCount();
+        if(StringUtils.indexOf(root.getNodePath(),keyword) > -1 ){
+            matchs.add(root);
+        }
+        if(count > 0){
+            for(int i = 0; i < count ; i++){
+                ZooInspectorTreeNode nextRoot = (ZooInspectorTreeNode)root.getChildAt(i);
+                searchMatchNode(nextRoot , keyword, matchs);
+            }
+        }
     }
 }

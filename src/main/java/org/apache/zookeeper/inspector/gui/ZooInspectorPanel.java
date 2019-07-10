@@ -18,10 +18,15 @@
 package org.apache.zookeeper.inspector.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -31,9 +36,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.ZooKeeper.States;
 import org.apache.zookeeper.inspector.gui.nodeviewer.ZooInspectorNodeViewer;
 import org.apache.zookeeper.inspector.logger.LoggerFactory;
@@ -121,6 +128,12 @@ public class ZooInspectorPanel extends JPanel implements
         toolbar.add(deleteNodeButton);
         toolbar.add(nodeViewersButton);
         toolbar.add(aboutButton);
+        JTextField searchfield = new JTextField(3);
+        searchfield.setMaximumSize(new Dimension(150, 30));
+        JButton searchButton = new JButton(ZooInspectorIconResources.getSearchIcon());
+
+        toolbar.add(searchfield);
+        toolbar.add(searchButton);
         aboutButton.setEnabled(true);
         connectButton.setEnabled(true);
         disconnectButton.setEnabled(false);
@@ -253,6 +266,49 @@ public class ZooInspectorPanel extends JPanel implements
                 zicpd.setVisible(true);
             }
         });
+
+        searchButton.addActionListener(new ActionListener(){
+        
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchText = searchfield.getText();
+                if(StringUtils.isNotBlank(searchText)){
+                    try {
+                        treeViewer.setSelect(searchText);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        searchfield.addKeyListener(new KeyListener(){
+        
+            @Override
+            public void keyTyped(KeyEvent e) {
+                
+            }
+        
+            @Override
+            public void keyReleased(KeyEvent e) {
+                
+            }
+        
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                      searchButton.doClick();
+                      break;
+                    case KeyEvent.VK_ESCAPE:
+                      searchfield.setText("");
+                      break;
+                    default:
+                      break;
+              }
+            }
+        });
+
         JScrollPane treeScroller = new JScrollPane(treeViewer);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 treeScroller, nodeViewersPanel);
