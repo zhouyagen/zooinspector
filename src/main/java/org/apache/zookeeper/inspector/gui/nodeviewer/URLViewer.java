@@ -2,7 +2,6 @@ package org.apache.zookeeper.inspector.gui.nodeviewer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,7 +20,6 @@ import org.apache.zookeeper.inspector.manager.ZooInspectorNodeManager;
 public class URLViewer extends ZooInspectorNodeViewer {
     
     private final JPanel dataPanel;
-    private String selectedNode;
     private JTextArea textArea;
     private Pattern iPattern = Pattern.compile("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}:\\d+");
 
@@ -29,14 +27,12 @@ public class URLViewer extends ZooInspectorNodeViewer {
         this.setLayout(new BorderLayout());
         this.dataPanel = new JPanel();
         this.dataPanel.setBackground(Color.WHITE);
-        textArea = new JTextArea(35, 80 );
+        textArea = new JTextArea(35, 30 );
         textArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         textArea.setLineWrap(true);
         textArea.setText("url data");
         JScrollPane textScroll = new JScrollPane(this.textArea);
-        this.dataPanel.add(textScroll);
-        JScrollPane scroller = new JScrollPane(this.dataPanel);
-        this.add(scroller, BorderLayout.CENTER);
+        this.add(textScroll, BorderLayout.CENTER);
     }
 
     @Override

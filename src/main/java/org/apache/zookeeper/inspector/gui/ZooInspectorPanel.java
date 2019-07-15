@@ -313,7 +313,7 @@ public class ZooInspectorPanel extends JPanel implements
         JScrollPane treeScroller = new JScrollPane(treeViewer);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 treeScroller, nodeViewersPanel);
-        splitPane.setResizeWeight(0.25);
+        splitPane.setResizeWeight(0.35);
         this.add(splitPane, BorderLayout.CENTER);
         this.add(toolbar, BorderLayout.NORTH);
     }
