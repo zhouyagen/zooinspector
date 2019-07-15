@@ -1017,6 +1017,7 @@ public class ZooInspectorManagerImpl implements ZooInspectorManager
         reader.close();
       }
     } else {
+      result.add("org.apache.zookeeper.inspector.gui.nodeviewer.URLViewer");
       result.add("org.apache.zookeeper.inspector.gui.nodeviewer.NodeViewerData");
       result.add("org.apache.zookeeper.inspector.gui.nodeviewer.NodeViewerMetaData");
       result.add("org.apache.zookeeper.inspector.gui.nodeviewer.NodeViewerACL");
